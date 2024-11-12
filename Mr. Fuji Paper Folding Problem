@@ -1,0 +1,252 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyO3PnEZcVipUkZDg4OjyB/L",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/MajiroZ/for_git_study/blob/master/Mr.%20Fuji%20Paper%20Folding%20Problem\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "【問題1】何回折ったら富士山を超えるか"
+      ],
+      "metadata": {
+        "id": "S8vKM6xhm4n-"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 6,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "daaT6TQ0mtVS",
+        "outputId": "fc664711-a871-48ad-c569-86c9496ddef5"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "厚さ : 5368.70912[m]\n",
+            "回数 : 25回\n"
+          ]
+        }
+      ],
+      "source": [
+        "THICKNESS = 0.00008\n",
+        "\n",
+        "folded_thickness = THICKNESS * 2\n",
+        "for i in range(44):\n",
+        "  folded_thickness = folded_thickness * 2\n",
+        "  if folded_thickness > 3776:\n",
+        "    break\n",
+        "\n",
+        "print(\"厚さ : {}[m]\".format(folded_thickness))\n",
+        "print(\"回数 : {}回\".format(i+1))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "【問題2】任意の厚さに対応した関数"
+      ],
+      "metadata": {
+        "id": "R_E99qgVuTkg"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def paper_fold_count(distance, thickness):\n",
+        "  folded_thickness = thickness\n",
+        "  for i in range(10000):\n",
+        "    folded_thickness = folded_thickness * 2\n",
+        "    if folded_thickness > distance:\n",
+        "      break\n",
+        "  return folded_thickness, i+1"
+      ],
+      "metadata": {
+        "id": "Nad7gOGduTRi"
+      },
+      "execution_count": 8,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "paper_fold_count(4.0175*10**16, 0.00008)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_ckDQdXFwpl1",
+        "outputId": "cd3a1b43-0642-4e1d-98d4-172570df6625"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(4.7223664828696456e+16, 69)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "最も近い太陽以外の恒星であるプロキシマ・ケンタウリ（約4.0175*10^16 m）まで到達するには、最低69回折る必要があるという結果になった。"
+      ],
+      "metadata": {
+        "id": "n_JnnNCEwy7v"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "【問題3】必要な紙の長さ"
+      ],
+      "metadata": {
+        "id": "X6TbeHwlxDHw"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def paper_length(distance, thickness):\n",
+        "  import math\n",
+        "  folded_thickness, count = paper_fold_count(distance, thickness)\n",
+        "  return math.pi * thickness * (2**count + 4) * (2**count - 1) / 6"
+      ],
+      "metadata": {
+        "id": "YFcL6Kz9xG85"
+      },
+      "execution_count": 10,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "月までの距離384,400kmに必要な長さ"
+      ],
+      "metadata": {
+        "id": "etgiVLXtyG_W"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"厚さ : {}[万km]\".format(paper_length(384400000, 0.00008) / 1000 /10000))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_YbzyhuZyKQ9",
+        "outputId": "8c06ad2b-4009-4b5e-a07d-1a510e8e0cf8"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "厚さ : 324091944417078.1[万km]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "富士山までの距離3,776mに必要な長さ"
+      ],
+      "metadata": {
+        "id": "G1GK1U5D1jKD"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"厚さ : {}[万km]\".format(paper_length(3776, 0.00008)/1000/10000))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Kb5MhB2k1pIJ",
+        "outputId": "d053881c-7d66-4193-f9f4-6d32aaa05801"
+      },
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "厚さ : 18864.634848724014[万km]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "最も近い太陽以外の恒星までの距離4.0175*10^16 mに必要な長さ"
+      ],
+      "metadata": {
+        "id": "XuXQoRZV17a_"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"厚さ : {}[万km]\".format(paper_length(4.0175*(10**16), 0.00008)/1000/10000))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "nw-5Z-cr2DkR",
+        "outputId": "7d2c52d4-e9ce-440f-fb66-c3a8a08b8113"
+      },
+      "execution_count": 21,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "厚さ : 1.4595803601100346e+30[万km]\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
