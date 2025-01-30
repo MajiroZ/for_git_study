@@ -11,6 +11,15 @@
       ]
     },
     {
+      "cell_type": "markdown",
+      "source": [
+        "###[Problem 1] Learning and estimation"
+      ],
+      "metadata": {
+        "id": "TU0bBK7oldd2"
+      }
+    },
+    {
       "cell_type": "code",
       "execution_count": null,
       "metadata": {
@@ -10971,6 +10980,112 @@
     {
       "cell_type": "markdown",
       "source": [
+        "###[Problem 2] Code\n",
+        "\n",
+        "\n",
+        "\n",
+        "#### **1. Installing dependencies**\n",
+        "```python\n",
+        "!pip install tensorflow keras opencv-python\n",
+        "```\n",
+        "- Installs necessary Python libraries:\n",
+        "  - `tensorflow`: For deep learning model training.\n",
+        "  - `keras`: A high-level API for building neural networks.\n",
+        "  - `opencv-python`: For image processing.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### **2. Setting up Kaggle API authentication**\n",
+        "```python\n",
+        "!mkdir -p ~/.kaggle\n",
+        "!mv kaggle.json ~/.kaggle/\n",
+        "!chmod 600 ~/.kaggle/kaggle.json\n",
+        "```\n",
+        "- **Creates a Kaggle API configuration directory (`~/.kaggle`).**\n",
+        "- **Moves the `kaggle.json` file (Kaggle API key) to the directory.**\n",
+        "- **Changes the permission of `kaggle.json` to make it accessible only to the owner (security measure).**\n",
+        "  \n",
+        "This setup is needed to download datasets from Kaggle.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### **3. Downloading dataset from Kaggle**\n",
+        "```python\n",
+        "!kaggle datasets download -d alexattia/the-simpsons-characters-dataset\n",
+        "!unzip the-simpsons-characters-dataset.zip\n",
+        "```\n",
+        "- **Downloads \"The Simpsons Characters Dataset\" from Kaggle.**\n",
+        "- **Extracts the dataset files.**\n",
+        "  \n",
+        "This dataset likely contains images of characters from \"The Simpsons,\" used for training a deep learning model.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### **4. Training the model**\n",
+        "```python\n",
+        "!python train.py -p /content/annotation.txt\n",
+        "```\n",
+        "- **Runs `train.py`, which starts training a deep learning model.**\n",
+        "- `-p /content/annotation.txt`:\n",
+        "  - Specifies the path to the annotation file (bounding boxes and labels for training).\n",
+        "  \n",
+        "**Possible steps inside `train.py`:**\n",
+        "1. Loads the dataset.\n",
+        "2. Processes the images and annotations.\n",
+        "3. Builds the Faster R-CNN model (ResNet-based).\n",
+        "4. Trains the model using RPN (Region Proposal Network) and ROI pooling.\n",
+        "5. Saves the trained model configuration and weights.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### **5. Listing saved model files**\n",
+        "```python\n",
+        "!ls ./save/\n",
+        "```\n",
+        "- Lists the contents of the `save/` directory, where the trained model files (weights, config, etc.) are stored.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### **6. Running inference on test images**\n",
+        "```python\n",
+        "!python predict.py -i kaggle_simpson_testset/kaggle_simpson_testset -c /content/save/train_20250130-073320_config.pickle\n",
+        "```\n",
+        "- **Runs `predict.py` to make predictions using the trained model.**\n",
+        "- `-i kaggle_simpson_testset/kaggle_simpson_testset`:\n",
+        "  - Specifies the directory of test images.\n",
+        "- `-c /content/save/train_20250130-073320_config.pickle`:\n",
+        "  - Loads the trained model configuration file.\n",
+        "\n",
+        "---\n",
+        "#### **i) Region Proposal Network (RPN)**\n",
+        "\n",
+        "- **Part of Faster R-CNN, responsible for generating region proposals.**\n",
+        "- `base_layers`: Feature maps extracted from ResNet.\n",
+        "- `num_anchors`: Defines how many anchor boxes are used for detecting objects of different scales.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### **ii) ROI Pooling**\n",
+        "\n",
+        "- **Extracts fixed-size feature maps from the variable-sized proposals (from RPN).**\n",
+        "- Ensures that regions of interest (ROIs) are processed correctly before classification.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "#### **iii) Loss Functions**\n",
+        "\n",
+        "- Calculates **regression loss** for refining anchor boxes.\n",
+        "- Calculates **classification loss** for determining whether an anchor contains an object.\n",
+        "- Calculates **regression loss for final object bounding box refinement.**\n",
+        "- Calculates **classification loss for identifying which object is present.**"
+      ],
+      "metadata": {
+        "id": "p1ubBWpLlkna"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
         "## [Problem 3] Estimate based on learned weights"
       ],
       "metadata": {
@@ -10994,11 +11109,11 @@
         "!git clone https://github.com/pjreddie/darknet"
       ],
       "metadata": {
-        "id": "xkH5lFprZHKC",
-        "outputId": "a37fffc5-457c-4ede-bf4f-97f72851b881",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "xkH5lFprZHKC",
+        "outputId": "a37fffc5-457c-4ede-bf4f-97f72851b881"
       },
       "execution_count": 10,
       "outputs": [
@@ -11021,11 +11136,11 @@
         "cd darknet"
       ],
       "metadata": {
-        "id": "I1888j43ZNwM",
-        "outputId": "af66d786-b12b-4a06-bdba-c15030107d62",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "I1888j43ZNwM",
+        "outputId": "af66d786-b12b-4a06-bdba-c15030107d62"
       },
       "execution_count": 11,
       "outputs": [
@@ -11044,11 +11159,11 @@
         "!make"
       ],
       "metadata": {
-        "id": "m_A_471DZRWD",
-        "outputId": "aac4899d-5851-4c75-d22a-fcaad124e026",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "m_A_471DZRWD",
+        "outputId": "aac4899d-5851-4c75-d22a-fcaad124e026"
       },
       "execution_count": 12,
       "outputs": [
@@ -11135,11 +11250,11 @@
         "!wget https://pjreddie.com/media/files/yolov3.weights"
       ],
       "metadata": {
-        "id": "KCak59DZZj9r",
-        "outputId": "87eb2450-dba9-493d-d173-38295866300b",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "KCak59DZZj9r",
+        "outputId": "87eb2450-dba9-493d-d173-38295866300b"
       },
       "execution_count": 13,
       "outputs": [
@@ -11168,11 +11283,11 @@
         "!./darknet detect cfg/yolov3.cfg yolov3.weights /content/darknet/data/dog.jpg"
       ],
       "metadata": {
-        "id": "eReEdtCnZvWL",
-        "outputId": "d624c58c-1043-474e-cc95-9257ecb91d7e",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "eReEdtCnZvWL",
+        "outputId": "d624c58c-1043-474e-cc95-9257ecb91d7e"
       },
       "execution_count": 15,
       "outputs": [
@@ -11317,12 +11432,12 @@
         "plt.imshow(img)"
       ],
       "metadata": {
-        "id": "mRkUuq9Vaavl",
-        "outputId": "12cb6c34-00e7-4dcd-89de-178b73133cf3",
         "colab": {
           "base_uri": "https://localhost:8080/",
           "height": 453
-        }
+        },
+        "id": "mRkUuq9Vaavl",
+        "outputId": "12cb6c34-00e7-4dcd-89de-178b73133cf3"
       },
       "execution_count": 17,
       "outputs": [
@@ -11354,11 +11469,11 @@
         "!./darknet detector test cfg/coco.data cfg/yolov3.cfg yolov3.weights data/dog.jpg"
       ],
       "metadata": {
-        "id": "LFzirS9IapAy",
-        "outputId": "50ed5a24-8fd1-4442-9993-186e032af74b",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "LFzirS9IapAy",
+        "outputId": "50ed5a24-8fd1-4442-9993-186e032af74b"
       },
       "execution_count": 18,
       "outputs": [
@@ -11489,11 +11604,11 @@
         "!./darknet detect cfg/yolov3.cfg yolov3.weights"
       ],
       "metadata": {
-        "id": "bk-VJt5gaxE6",
-        "outputId": "38ac9048-87e7-4ecc-fefb-cd2f08b71a7d",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "bk-VJt5gaxE6",
+        "outputId": "38ac9048-87e7-4ecc-fefb-cd2f08b71a7d"
       },
       "execution_count": 20,
       "outputs": [
@@ -11633,12 +11748,12 @@
         "plt.imshow(img_)"
       ],
       "metadata": {
-        "id": "dX3fifRla7R4",
-        "outputId": "1301db3f-6e3d-477d-c708-9e3c34b11c50",
         "colab": {
           "base_uri": "https://localhost:8080/",
           "height": 451
-        }
+        },
+        "id": "dX3fifRla7R4",
+        "outputId": "1301db3f-6e3d-477d-c708-9e3c34b11c50"
       },
       "execution_count": 21,
       "outputs": [
@@ -11679,11 +11794,11 @@
         "!wget https://pjreddie.com/media/files/yolov3-tiny.weights"
       ],
       "metadata": {
-        "id": "OwTqu7omgWEU",
-        "outputId": "b471c372-b3f4-47c3-b961-549e099607dd",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "OwTqu7omgWEU",
+        "outputId": "b471c372-b3f4-47c3-b961-549e099607dd"
       },
       "execution_count": 22,
       "outputs": [
@@ -11712,11 +11827,11 @@
         "!./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg"
       ],
       "metadata": {
-        "id": "Cj1gTFUegZUP",
-        "outputId": "3a29e5e3-45bd-459e-abbf-afee8dc43c48",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "Cj1gTFUegZUP",
+        "outputId": "3a29e5e3-45bd-459e-abbf-afee8dc43c48"
       },
       "execution_count": 23,
       "outputs": [
@@ -11768,12 +11883,12 @@
         "plt.imshow(img_)"
       ],
       "metadata": {
-        "id": "nSKj6b52getl",
-        "outputId": "55b18f38-0bb7-4b8b-d0d2-0752349f6d77",
         "colab": {
           "base_uri": "https://localhost:8080/",
           "height": 453
-        }
+        },
+        "id": "nSKj6b52getl",
+        "outputId": "55b18f38-0bb7-4b8b-d0d2-0752349f6d77"
       },
       "execution_count": 24,
       "outputs": [
@@ -11814,11 +11929,11 @@
         "ls"
       ],
       "metadata": {
-        "id": "d7bkSbYGghki",
-        "outputId": "8263dfa0-2cd2-4394-b22b-465cec52cf80",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "d7bkSbYGghki",
+        "outputId": "8263dfa0-2cd2-4394-b22b-465cec52cf80"
       },
       "execution_count": 25,
       "outputs": [
@@ -11841,11 +11956,11 @@
         "cd keras-yolo"
       ],
       "metadata": {
-        "id": "JAuBIlb9gu81",
-        "outputId": "2794cb08-c601-412d-a722-f42425448c43",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "JAuBIlb9gu81",
+        "outputId": "2794cb08-c601-412d-a722-f42425448c43"
       },
       "execution_count": 28,
       "outputs": [
@@ -11865,11 +11980,11 @@
         "!wget https://pjreddie.com/media/files/yolov3.weights"
       ],
       "metadata": {
-        "id": "xEmXXQa6hoY4",
-        "outputId": "8c5d961a-2920-4e5a-b248-54218133f730",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "xEmXXQa6hoY4",
+        "outputId": "8c5d961a-2920-4e5a-b248-54218133f730"
       },
       "execution_count": 29,
       "outputs": [
@@ -11898,11 +12013,11 @@
         "!python convert.py yolov3.cfg yolov3.weights model_data/yolo.h5"
       ],
       "metadata": {
-        "id": "QTOgFh21h1n5",
-        "outputId": "2202315b-b108-4f9f-8946-ffd80de85f57",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "QTOgFh21h1n5",
+        "outputId": "2202315b-b108-4f9f-8946-ffd80de85f57"
       },
       "execution_count": 30,
       "outputs": [
@@ -11939,11 +12054,11 @@
         "!pip install Keras-Applications==1.0.7"
       ],
       "metadata": {
-        "id": "6popAUMciHRJ",
-        "outputId": "1e252cce-cab6-4e60-b646-ba9e2838db0d",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "6popAUMciHRJ",
+        "outputId": "1e252cce-cab6-4e60-b646-ba9e2838db0d"
       },
       "execution_count": 31,
       "outputs": [
@@ -11969,11 +12084,11 @@
         "!python yolo_video.py --image"
       ],
       "metadata": {
-        "id": "f2fAwHILiMT4",
-        "outputId": "05a6da5f-7b23-4703-abe5-f0de017d4fee",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "f2fAwHILiMT4",
+        "outputId": "05a6da5f-7b23-4703-abe5-f0de017d4fee"
       },
       "execution_count": 32,
       "outputs": [
@@ -12005,11 +12120,11 @@
         "! python convert.py yolov3.cfg yolov3.weights model_data/yolo.h5"
       ],
       "metadata": {
-        "id": "QL19kOCtiTqG",
-        "outputId": "d16c96e4-c96f-4562-a75f-2169a1e9b34a",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "QL19kOCtiTqG",
+        "outputId": "d16c96e4-c96f-4562-a75f-2169a1e9b34a"
       },
       "execution_count": 33,
       "outputs": [
@@ -12058,11 +12173,11 @@
         "print(data)"
       ],
       "metadata": {
-        "id": "bsTojS-9imVS",
-        "outputId": "d84f8baf-5524-41a3-ac47-b39c5cff40c8",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "bsTojS-9imVS",
+        "outputId": "d84f8baf-5524-41a3-ac47-b39c5cff40c8"
       },
       "execution_count": 35,
       "outputs": [
@@ -19982,11 +20097,11 @@
         "print(data2)"
       ],
       "metadata": {
-        "id": "B0Ql_ZlsjtRv",
-        "outputId": "a4b225fb-1a4d-4410-dcd2-a9769f113628",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "B0Ql_ZlsjtRv",
+        "outputId": "a4b225fb-1a4d-4410-dcd2-a9769f113628"
       },
       "execution_count": 37,
       "outputs": [
@@ -20034,11 +20149,11 @@
         "!python convert.py -w yolov3.cfg yolov3.weights model_data/yolo_weights.h5"
       ],
       "metadata": {
-        "id": "iAozFrzIj2jD",
-        "outputId": "6c0478ad-8744-4516-aa00-522f0090af0f",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "iAozFrzIj2jD",
+        "outputId": "6c0478ad-8744-4516-aa00-522f0090af0f"
       },
       "execution_count": 38,
       "outputs": [
@@ -20066,11 +20181,11 @@
         "!python train.py"
       ],
       "metadata": {
-        "id": "A-thWxB2j-CM",
-        "outputId": "425b1796-cbbc-4da6-b038-451e23aac055",
         "colab": {
           "base_uri": "https://localhost:8080/"
-        }
+        },
+        "id": "A-thWxB2j-CM",
+        "outputId": "425b1796-cbbc-4da6-b038-451e23aac055"
       },
       "execution_count": 39,
       "outputs": [
@@ -20098,7 +20213,7 @@
   "metadata": {
     "colab": {
       "provenance": [],
-      "authorship_tag": "ABX9TyPvA1JAS4OeKtLW9doA/Mlb",
+      "authorship_tag": "ABX9TyMvLv2/W0Yk1EI62Nm3cnLM",
       "include_colab_link": true
     },
     "kernelspec": {
